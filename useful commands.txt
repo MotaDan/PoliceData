@@ -1,0 +1,11 @@
+Display addresses without a nice name in descending order based on incident count
+SELECT COUNT(*), calls.*, nicenames.desc FROM calls LEFT JOIN nicenames ON calls.address LIKE '%' || nicenames.address || '%' WHERE nicenames.address IS NULL GROUP BY calls.address ORDER BY COUNT(*) DESC LIMIT 50;
+
+Insert entry into nicenames
+INSERT INTO nicenames VALUES (154, '400 east central boulevard', '#PublixAtParamountOnLakeEola');
+
+Update entry in nicenames
+UPDATE nicenames SET desc = 'west orange blossom trail & t l smith road' WHERE id = 102;
+
+Sort by most incident prone address, grouping by nicenames
+SELECT nicenames.desc, calls.address, COUNT(calls.address) FROM calls LEFT JOIN nicenames ON calls.address LIKE '%' || nicenames.address || '%' GROUP BY nicenames.desc, CASE WHEN nicenames.desc IS NULL THEN calls.address ELSE 0 END ORDER BY COUNT(calls.address) DESC LIMIT 100;
